@@ -1,756 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jerryz - Premium Digital Products</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #8a2be2;
-            --primary-dark: #5c00c7;
-            --primary-light: #b388ff;
-            --secondary: #ff4081;
-            --text: #f5f5f5;
-            --bg-dark: #0f0c1d;
-            --bg-light: #1d1738;
-            --card-bg: rgba(26, 15, 58, 0.8);
-            --glow: 0 0 15px var(--primary-light);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, var(--bg-dark), var(--bg-light));
-            color: var(--text);
-            overflow-x: hidden;
-            min-height: 100vh;
-            background-attachment: fixed;
-        }
-        
-        /* Header & Navigation */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            background: rgba(15, 8, 35, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.3);
-        }
-        
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: var(--glow);
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-        
-        .nav-links a {
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 500;
-            transition: 0.3s;
-            position: relative;
-            padding: 0.5rem 0;
-        }
-        
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary-light);
-            transition: 0.3s;
-        }
-        
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-        
-        .nav-links a:hover {
-            color: var(--primary-light);
-        }
-        
-        /* Hero Section */
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(138, 43, 226, 0.1) 0%, rgba(15, 12, 29, 0) 70%);
-            z-index: -1;
-        }
-        
-        .hero h1 {
-            font-size: 8rem;
-            font-weight: 900;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5rem;
-            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--primary-light));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: glow 2s infinite alternate;
-            text-shadow: 0 0 10px rgba(179, 136, 255, 0.5);
-        }
-        
-        .hero h2 {
-            font-size: 2rem;
-            font-weight: 300;
-            margin-bottom: 2rem;
-            max-width: 800px;
-        }
-        
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 600px;
-            opacity: 0.8;
-            margin-bottom: 2rem;
-        }
-        
-        .cta-button {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 1rem 2.5rem;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .cta-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(138, 43, 226, 0.6);
-        }
-        
-        .cta-button::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: rgba(255, 255, 255, 0.1);
-            transform: rotate(30deg);
-            transition: 0.5s;
-        }
-        
-        .cta-button:hover::after {
-            transform: rotate(30deg) translate(20%, 20%);
-        }
-        
-        /* Marquee */
-        .marquee {
-            background: rgba(138, 43, 226, 0.2);
-            padding: 1rem 0;
-            overflow: hidden;
-            white-space: nowrap;
-            position: relative;
-            margin: 2rem 0;
-            border-top: 1px solid var(--primary-light);
-            border-bottom: 1px solid var(--primary-light);
-        }
-        
-        .marquee-content {
-            display: inline-block;
-            animation: marquee 20s linear infinite;
-            padding-left: 100%;
-        }
-        
-        .marquee-content span {
-            display: inline-block;
-            padding: 0 2rem;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--primary-light);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        
-        /* Sections */
-        section {
-            padding: 5rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            position: relative;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 2px;
-        }
-        
-        /* About Section */
-        .about {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 3rem;
-            padding-top: 8rem;
-        }
-        
-        .profile-pic {
-            flex: 1;
-            min-width: 300px;
-            display: flex;
-            justify-content: center;
-        }
-        
-        .profile-pic img {
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 5px solid var(--primary);
-            box-shadow: var(--glow), 0 0 30px rgba(138, 43, 226, 0.5);
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        .about-content {
-            flex: 2;
-            min-width: 300px;
-        }
-        
-        .about-content h3 {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            color: var(--primary-light);
-        }
-        
-        .about-content p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 1.5rem;
-            opacity: 0.9;
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-        
-        .social-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--card-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: var(--primary-light);
-            transition: 0.3s;
-            border: 2px solid var(--primary);
-        }
-        
-        .social-icon:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-5px);
-            box-shadow: var(--glow);
-        }
-        
-        /* Product Cards */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .product-card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            overflow: hidden;
-            transition: 0.4s;
-            border: 1px solid var(--primary);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .product-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(255, 64, 129, 0.1));
-            z-index: -1;
-            opacity: 0;
-            transition: 0.4s;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--glow), 0 15px 30px rgba(0, 0, 0, 0.3);
-        }
-        
-        .product-card:hover::before {
-            opacity: 1;
-        }
-        
-        .product-icon {
-            height: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            background: rgba(15, 8, 35, 0.7);
-            color: var(--primary-light);
-            border-bottom: 2px solid var(--primary);
-        }
-        
-        .product-content {
-            padding: 1.5rem;
-        }
-        
-        .product-title {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary-light);
-        }
-        
-        .product-description {
-            opacity: 0.8;
-            margin-bottom: 1rem;
-            line-height: 1.6;
-        }
-        
-        /* Discord Section */
-        .discord-section {
-            text-align: center;
-            background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(138, 43, 226, 0.1));
-            padding: 5rem 2rem;
-            border-radius: 20px;
-            margin: 5rem auto;
-            max-width: 1000px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .discord-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(88, 101, 242, 0.1) 0%, transparent 70%);
-            z-index: -1;
-            animation: rotate 20s linear infinite;
-        }
-        
-        .discord-button {
-            background: #5865F2;
-            color: white;
-            padding: 1rem 2.5rem;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 2rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
-        }
-        
-        .discord-button:hover {
-            background: #4752c4;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(88, 101, 242, 0.6);
-        }
-        
-        /* Footer */
-        footer {
-            background: rgba(10, 5, 25, 0.9);
-            padding: 3rem 2rem;
-            text-align: center;
-            margin-top: 5rem;
-        }
-        
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .footer-logo {
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 1.5rem;
-            display: inline-block;
-        }
-        
-        .copyright {
-            opacity: 0.7;
-            margin-top: 2rem;
-        }
-        
-        /* Animations */
-        @keyframes glow {
-            0% { text-shadow: 0 0 10px rgba(179, 136, 255, 0.5); }
-            100% { text-shadow: 0 0 30px rgba(179, 136, 255, 0.8), 0 0 60px rgba(138, 43, 226, 0.6); }
-        }
-        
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
-        }
-        
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
-        }
-        
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Scroll Animations */
-        .hidden {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 1s;
-        }
-        
-        .show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 4rem;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-            
-            .about {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .social-links {
-                justify-content: center;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JERRYZ • Digital Goods Reseller</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Xx+HkY0ZJS8IxNx9fP3kGkNJhZ4kMJT8hQxZOVzKM2Ys6KA2Np8x4p+qp8YwUjiSPHaNkoFqmeqEV+OuYcFfKg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- AOS (Animate On Scroll) -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+  <style>
+    :root {
+      --purple-0: #3b1c71;
+      --purple-1: #662d91;
+      --purple-2: #8e2de2;
+      --purple-3: #a044ff;
+      --purple-glow: rgba(160, 68, 255, 0.6);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--purple-0), var(--purple-1), var(--purple-2));
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* Hero Section */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 8rem);
+      font-weight: 800;
+      text-shadow: 0 0 30px var(--purple-glow), 0 0 60px var(--purple-glow);
+      animation: glow 3s ease-in-out infinite alternate;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      margin-top: 1rem;
+      opacity: 0.8;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px var(--purple-glow), 0 0 20px var(--purple-glow);
+      }
+      to {
+        text-shadow: 0 0 40px var(--purple-glow), 0 0 80px var(--purple-glow);
+      }
+    }
+
+    .scroll-down {
+      position: absolute;
+      bottom: 40px;
+      font-size: 2rem;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);}
+    }
+
+    /* Sections */
+    section {
+      padding: 5rem 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 2.8rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--purple-3);
+      border-radius: 2px;
+      box-shadow: 0 0 10px var(--purple-glow);
+    }
+
+    /* About */
+    .about-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .about-container img {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      border: 4px solid var(--purple-3);
+      box-shadow: 0 0 20px var(--purple-glow);
+    }
+
+    .about-text {
+      max-width: 600px;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    /* Product Grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1.5rem;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 4px 30px var(--purple-glow);
+    }
+
+    .card i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--purple-3);
+      filter: drop-shadow(0 0 10px var(--purple-glow));
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      opacity: 0.75;
+      margin-top: 0.5rem;
+    }
+
+    /* Marquee */
+    .marquee {
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 0.7rem 0;
+    }
+
+    .marquee p {
+      display: inline-block;
+      font-weight: 600;
+      font-size: 1rem;
+      animation: marquee 18s linear infinite;
+      padding-left: 100%;
+    }
+
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* Discord CTA */
+    .discord-cta {
+      text-align: center;
+    }
+
+    .discord-cta a {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.9rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      background: var(--purple-3);
+      color: #fff;
+      border-radius: 2rem;
+      box-shadow: 0 0 15px var(--purple-glow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-decoration: none;
+    }
+
+    .discord-cta a:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 0 25px var(--purple-glow);
+    }
+
+    /* Footer */
+    footer {
+      padding: 2rem 1rem;
+      text-align: center;
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+  </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <nav>
-            <div class="logo">JERRYZ</div>
-            <div class="nav-links">
-                <a href="#about">About</a>
-                <a href="#streaming">Streaming</a>
-                <a href="#discord">Discord</a>
-                <a href="#vpn">VPN</a>
-                <a href="#contact">Contact</a>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1>JERRYZ</h1>
-        <h2>PREMIUM DIGITAL PRODUCTS & SERVICES</h2>
-        <p>Your trusted source for streaming accounts, Discord perks, VPNs and more. Quality service with lightning-fast delivery.</p>
-        <button class="cta-button">SHOP NOW</button>
-    </section>
+<!-- Hero Section -->
+<section class="hero">
+  <h1>JERRYZ</h1>
+  <p>Your One‑Stop Digital Goods Shop</p>
+  <a href="#about" class="scroll-down"><i class="fa-solid fa-angles-down"></i></a>
+</section>
 
-    <!-- Marquee -->
-    <div class="marquee">
-        <div class="marquee-content">
-            <span>PREMIUM ACCOUNTS</span>
-            <span>INSTANT DELIVERY</span>
-            <span>24/7 SUPPORT</span>
-            <span>TRUSTED SELLER</span>
-            <span>100% SATISFACTION</span>
-            <span>SECURE PAYMENTS</span>
-            <span>PREMIUM ACCOUNTS</span>
-            <span>INSTANT DELIVERY</span>
-            <span>24/7 SUPPORT</span>
-            <span>TRUSTED SELLER</span>
-            <span>100% SATISFACTION</span>
-            <span>SECURE PAYMENTS</span>
-        </div>
+<!-- About Section -->
+<section id="about" data-aos="fade-up">
+  <h2 class="section-title">About Me</h2>
+  <div class="about-container">
+    <img src="pfp.png" alt="Jerryz profile picture" />
+    <div class="about-text">
+      <p>Hey! I'm <strong>Jerryz</strong>, a digital reseller passionate about bringing you top‑tier entertainment and online tools at unbeatable value. From <em>streaming subscriptions</em> to <em>Discord perks</em> and <em>VPN security</em>, I've got you covered. I've helped thousands unlock premium experiences worldwide.&nbsp;💜</p>
     </div>
+  </div>
+</section>
 
-    <!-- About Section -->
-    <section id="about" class="about hidden">
-        <div class="profile-pic">
-            <img src="pfp.png" alt="Jerryz Profile">
-        </div>
-        <div class="about-content">
-            <h3>ABOUT ME</h3>
-            <p>Hey! I'm Jerryz, a passionate digital products reseller with years of experience in the industry. I specialize in providing premium accounts for all your favorite streaming services, Discord perks, and VPN solutions.</p>
-            <p>As a Discord Nitro maker and reseller, I take pride in offering top-notch services with instant delivery and 24/7 customer support. My mission is to make premium digital experiences accessible to everyone.</p>
-            <p>When I'm not managing orders, you can find me gaming, exploring new tech, or helping out in my Discord community.</p>
-            <div class="social-links">
-                <a href="#" class="social-icon"><i class="fab fa-discord"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-telegram"></i></a>
-            </div>
-        </div>
-    </section>
+<!-- Marquee Section -->
+<div class="marquee">
+  <p>Streaming • Discord Nitro • VPNs • Server Boosts • Spotify • Netflix • Disney+ • DAZN • SurfEasy • TunnelBear • And More&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</p>
+</div>
 
-    <!-- Streaming Products -->
-    <section id="streaming" class="hidden">
-        <h2 class="section-title">STREAMING PRODUCTS</h2>
-        <div class="products-grid">
-            <div class="product-card">
-                <div class="product-icon" style="color: #1DB954;">
-                    <i class="fab fa-spotify"></i>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-title">Spotify Premium</h3>
-                    <p class="product-description">Ad-free music listening, download songs, highest quality audio.</p>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-icon" style="color: #E50914;">
-                    <i class="fab fa-netflix"></i>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-title">Netflix Premium</h3>
-                    <p class="product-description">Ultra HD streaming, multiple screens, unlimited movies and TV shows.</p>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-icon" style="color: #113CCF;">
-                    <i class="fab fa-disney"></i>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-title">Disney+</h3>
-                    <p class="product-description">Disney, Pixar, Marvel, Star Wars, and National Geographic content.</p>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-icon" style="color: #DA291C;">
-                    <i class="fas fa-tv"></i>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-title">DAZN</h3>
-                    <p class="product-description">Live sports streaming including football, boxing, basketball and more.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- Streaming Products -->
+<section id="streaming" data-aos="zoom-in">
+  <h2 class="section-title">Streaming Subscriptions</h2>
+  <div class="product-grid">
+    <div class="card" data-aos="fade-up" data-aos-delay="50"><i class="fa-brands fa-spotify"></i><h3>Spotify Premium</h3><p>Unlimited music & podcasts — ad‑free.</p></div>
+    <div class="card" data-aos="fade-up" data-aos-delay="100"><i class="fa-solid fa-clapperboard"></i><h3>Netflix Premium</h3><p>Watch your favourites in Ultra HD.</p></div>
+    <div class="card" data-aos="fade-up" data-aos-delay="150"><i class="fa-solid fa-film"></i><h3>Disney+</h3><p>Marvel, Star Wars & more on demand.</p></div>
+    <div class="card" data-aos="fade-up" data-aos-delay="200"><i class="fa-solid fa-football"></i><h3>DAZN</h3><p>Live sports. Anytime. Anywhere.</p></div>
+  </div>
+</section>
 
-    <!-- Discord Products -->
-    <section id="discord" class="hidden">
-        <h2 class="section-title">DISCORD PRODUCTS</h2>
-        <div class="products-grid">
-            <div class="product-card">
-                <div class="product-icon" style="color: #5865F2;">
-                    <i class="fab fa-discord"></i>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-title">Discord Nitro</h3>
-                    <p class="product-description">Full Nitro experience with HD video, server boosts, and custom emojis.</p>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-icon" style="color: #5865F2;">
-                    <i class="fas fa-rocket"></i>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-title">Server Boosts</h3>
-                    <p class="product-description">Level up your Discord server with premium perks and features.</p>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-icon" style="color: #5865F2;">
-                    <i class="fas fa-gem"></i>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-title">Nitro Basic</h3>
-                    <p class="product-description">Essential Nitro features at an affordable price point.</p>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-icon" style="color: #5865F2;">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-title">Server Protection</h3>
-                    <p class="product-description">Advanced security solutions for your Discord community.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- Discord Products -->
+<section id="discord" data-aos="zoom-in">
+  <h2 class="section-title">Discord Perks</h2>
+  <div class="product-grid">
+    <div class="card" data-aos="fade-up" data-aos-delay="50"><i class="fa-brands fa-discord"></i><h3>Discord Nitro</h3><p>Full Nitro for ultimate chat flair.</p></div>
+    <div class="card" data-aos="fade-up" data-aos-delay="100"><i class="fa-brands fa-discord"></i><h3>Discord Nitro Basic</h3><p>Essential perks at great value.</p></div>
+    <div class="card" data-aos="fade-up" data-aos-delay="150"><i class="fa-solid fa-rocket"></i><h3>Server Boosts</h3><p>Boost your community to new levels.</p></div>
+  </div>
+</section>
 
-    <!-- VPN Products -->
-    <section id="vpn" class="hidden">
-        <h2 class="section-title">VPN SERVICES</h2>
-        <div class="products-grid">
-            <div class="product-card">
-                <div class="product-icon" style="color: #00AEF0;">
-                    <i class="fas fa-lock"></i>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-title">SurfEasy VPN</h3>
-                    <p class="product-description">Secure your internet connection and browse anonymously worldwide.</p>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-icon" style="color: #F58220;">
-                    <i class="fas fa-bear"></i>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-title">TunnelBear</h3>
-                    <p class="product-description">Friendly VPN service with strong privacy and simple interface.</p>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-icon" style="color: #ED1C24;">
-                    <i class="fas fa-globe"></i>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-title">ExpressVPN</h3>
-                    <p class="product-description">Lightning-fast VPN with servers in 94 countries worldwide.</p>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-icon" style="color: #5D8C2A;">
-                    <i class="fas fa-leaf"></i>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-title">NordVPN</h3>
-                    <p class="product-description">Advanced security with double VPN encryption and CyberSec.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- VPN Products -->
+<section id="vpn" data-aos="zoom-in">
+  <h2 class="section-title">VPN Services</h2>
+  <div class="product-grid">
+    <div class="card" data-aos="fade-up" data-aos-delay="50"><i class="fa-solid fa-shield-halved"></i><h3>SurfEasy VPN</h3><p>Browse privately with ease.</p></div>
+    <div class="card" data-aos="fade-up" data-aos-delay="100"><i class="fa-solid fa-shield-halved"></i><h3>TunnelBear VPN</h3><p>Roam the web securely — rawr! 🐻</p></div>
+    <div class="card" data-aos="fade-up" data-aos-delay="150"><i class="fa-solid fa-shield-halved"></i><h3>Other Premium VPNs</h3><p>Contact me for full list & availability.</p></div>
+  </div>
+</section>
 
-    <!-- Discord Server Section -->
-    <section id="contact" class="discord-section hidden">
-        <h2 class="section-title">JOIN MY DISCORD SERVER</h2>
-        <p>Connect with me and thousands of satisfied customers in my Discord community. Get exclusive deals, support, and updates!</p>
-        <a href="https://discord.gg/qeCc8yEv" class="discord-button">
-            <i class="fab fa-discord"></i> JOIN NOW
-        </a>
-    </section>
+<!-- Discord Server CTA -->
+<section id="community" data-aos="fade-up">
+  <h2 class="section-title">Join the Community</h2>
+  <div class="discord-cta">
+    <p>Got questions? Need custom bundles? Hop into the server and chat with me directly.</p>
+    <a href="https://discord.gg/qeCc8yEv" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-discord"></i> Enter Discord</a>
+  </div>
+</section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">JERRYZ</div>
-            <p>Premium Digital Products & Services</p>
-            <p class="copyright">© 2023 Jerryz. All rights reserved.</p>
-        </div>
-    </footer>
+<!-- Footer -->
+<footer>
+  © <span id="year"></span> Jerryz • All rights reserved.
+</footer>
 
-    <script>
-        // Scroll animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('show');
-                }
-            });
-        });
-        
-        const hiddenElements = document.querySelectorAll('.hidden');
-        hiddenElements.forEach((el) => observer.observe(el));
-        
-        // Glowing effect for product cards on hover
-        const productCards = document.querySelectorAll('.product-card');
-        productCards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                card.style.setProperty('--mouse-x', `${x}px`);
-                card.style.setProperty('--mouse-y', `${y}px`);
-            });
-        });
-    </script>
+<!-- Scripts -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({
+    once: true,
+    duration: 800,
+    easing: 'ease-out-cubic'
+  });
+  // Update footer year automatically
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
 </body>
 </html>

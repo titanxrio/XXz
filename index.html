@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TITAN SERVICE SECURITY | Quantum Anti-Cheat Protection</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
+    <style>
+        :root {
+            --titan-blue: #0a1128;
+            --neon-blue: #00f3ff;
+            --neon-purple: #b967ff;
+            --cyber-yellow: #ffd300;
+            --cyber-pink: #ff2a6d;
+            --matrix-green: #0fff50;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', 'Orbitron', sans-serif;
+        }
+        
+        body {
+            background-color: var(--titan-blue);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+            perspective: 1000px;
+            background: radial-gradient(circle at center, #050a1f 0%, #020512 70%);
+        }
+        
+        #main-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 80px 80px;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .cyber-grid::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 60%, rgba(10, 17, 40, 0.9) 100%);
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(10, 17, 40, 0.3);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+        }
+        
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+        
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            margin-right: 15px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+        
+        .logo-icon::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 40%, rgba(0, 243, 255, 0.6) 100%);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+        
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 1px;
+            position: relative;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+        }
+        
+        .nav-links a:hover {
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+        
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .cta-button {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            color: var(--titan-blue);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 243, 255, 0.7);
+        }
+        
+        .cta-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+        
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 5%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero h1 {
+            font-size: 6rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--neon-blue), var(--cyber-pink), var(--cyber-yellow));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .hero h2 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            max-width: 900px;
+            margin-bottom: 3rem;
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.7;
+            position: relative;
+            z-index: 10;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+        
+        .hero-stats {
+            display: flex;
+            gap: 4rem;
+            margin-top: 4rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .stat-box {
+            text-align: center;
+            position: relative;
+        }
+        
+        .stat-value {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--cyber-yellow), var(--cyber-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 15px rgba(255, 43, 109, 0.5);
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 2rem;
+            margin-top: 4rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Sections */
+        section {
+            padding: 10rem 5%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 6rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .section-header h2 {
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+        }
+        
+        .section-header p {
+            font-size: 1.4rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+        }
+        
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .feature-card {
+            background: rgba(20, 30, 65, 0.3);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 243, 255, 0.3);
+            border: 1px solid rgba(0, 243, 255, 0.5);
+        }
+        
+        .feature-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+        }
+        
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .feature-card h3 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+        
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        
+        /* Globe Section */
+        .globe-section {
+            display: flex;
+            align-items: center;
+            gap: 6rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .globe-container {
+            flex: 1;
+            height: 600px;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+        
+        #globe-canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(0, 243, 255, 0.4);
+        }
+        
+        .globe-content {
+            flex: 1;
+        }
+        
+        .globe-content h3 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, var(--cyber-yellow), var(--cyber-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(255, 43, 109, 0.4);
+        }
+        
+        .globe-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.8;
+        }
+        
+        /* Neural Network Section */
+        .neural-section {
+            position: relative;
+            height: 120vh;
+            overflow: hidden;
+        }
+        
+        #neural-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .neural-content {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding-top: 10rem;
+        }
+        
+        /* Quantum Tunnel */
+        .tunnel-section {
+            position: relative;
+            height: 150vh;
+            overflow: hidden;
+        }
+        
+        #tunnel-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .tunnel-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            text-align: center;
+            width: 100%;
+        }
+        
+        /* Stats Section */
+        .stats-section {
+            background: radial-gradient(circle at center, rgba(20, 30, 65, 0.4) 0%, rgba(10, 17, 40, 0) 70%);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2.5rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .stat-card {
+            background: rgba(20, 30, 65, 0.4);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-align: center;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 243, 255, 0.3);
+            border: 1px solid rgba(0, 243, 255, 0.5);
+        }
+        
+        .stat-card h3 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-card p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        /* Footer */
+        footer {
+            background: rgba(5, 10, 25, 0.9);
+            padding: 6rem 5% 3rem;
+            border-top: 1px solid rgba(0, 243, 255, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 4rem;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 1.2rem;
+        }
+        
+        .footer-column ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 5rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+        
+        /* Matrix Rain */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.1;
+        }
+        
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0.7); }
+            70% { box-shadow: 0 0 0 25px rgba(0, 243, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0); }
+        }
+        
+        @keyframes glow {
+            0% { text-shadow: 0 0 5px var(--neon-blue); }
+            50% { text-shadow: 0 0 20px var(--neon-blue); }
+            100% { text-shadow: 0 0 5px var(--neon-blue); }
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .pulse {
+            animation: pulse 3s infinite;
+        }
+        
+        .glow {
+            animation: glow 2s infinite;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .hero h1 {
+                font-size: 4.5rem;
+            }
+            
+            .section-header h2 {
+                font-size: 3.5rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .hero-stats {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .globe-section {
+                flex-direction: column;
+            }
+            
+            .globe-container {
+                width: 100%;
+                height: 400px;
+                margin-bottom: 4rem;
+            }
+            
+            .section-header h2 {
+                font-size: 3rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .hero h2 {
+                font-size: 1.3rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2.5rem;
+            }
+            
+            .stat-value {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Matrix Rain Background -->
+    <canvas id="matrix-canvas"></canvas>
+    
+    <!-- Cyber Grid -->
+    <div class="cyber-grid"></div>
+    
+    <!-- Main Canvas -->
+    <canvas id="main-canvas"></canvas>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <div class="logo-icon"></div>
+            TITAN SECURITY
+        </div>
+        <div class="nav-links">
+            <a href="#features">Technology</a>
+            <a href="#globe">Global Reach</a>
+            <a href="#neural">AI Defense</a>
+            <a href="#tunnel">Quantum Core</a>
+            <a href="#stats">Performance</a>
+        </div>
+        <button class="cta-button">GET PROTECTED</button>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>QUANTUM ANTI-CHEAT DEFENSE</h1>
+        <h2>Advanced Neural Security Protecting Over 5 Million Servers Against Next-Generation Threats</h2>
+        <div class="hero-stats">
+            <div class="stat-box">
+                <div class="stat-value">5M+</div>
+                <div class="stat-label">Servers Secured</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">99.999%</div>
+                <div class="stat-label">Detection Rate</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">&lt;0.1ms</div>
+                <div class="stat-label">Response Time</div>
+            </div>
+        </div>
+        <div class="hero-buttons">
+            <button class="cta-button pulse">FREE SECURITY AUDIT</button>
+            <button class="cta-button" style="background: transparent; border: 2px solid var(--neon-blue); color: var(--neon-blue);">VIEW DEMO</button>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section id="features">
+        <div class="section-header">
+            <h2>REVOLUTIONARY SECURITY TECHNOLOGY</h2>
+            <p>Our proprietary TitanShield™ technology combines AI, behavioral analysis, and quantum cryptography to deliver unparalleled protection</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>Neural Network AI</h3>
+                <p>Self-learning AI that evolves with new threats, detecting cheat patterns before they're even recognized by traditional systems. Continuously analyzes 1.2 billion data points per second.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-atom"></i>
+                </div>
+                <h3>Quantum Encryption</h3>
+                <p>Unbreakable quantum-level encryption that secures all server communications and prevents man-in-the-middle attacks. Based on quantum entanglement principles.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>Zero-Latency Detection</h3>
+                <p>Real-time cheat detection with sub-millisecond response time, eliminating lag while maintaining security. Processes threats at the speed of light.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Globe Section -->
+    <section id="globe">
+        <div class="section-header">
+            <h2>GLOBAL SECURITY NETWORK</h2>
+            <p>Our decentralized protection grid spans the globe, providing localized security with global intelligence</p>
+        </div>
+        <div class="globe-section">
+            <div class="globe-container">
+                <canvas id="globe-canvas"></canvas>
+            </div>
+            <div class="globe-content">
+                <h3>WORLDWIDE PROTECTION INFRASTRUCTURE</h3>
+                <p>Titan Security operates 256 ultra-secure quantum data centers across 7 continents, ensuring localized protection with global threat intelligence sharing. Our network spans from the Arctic to Antarctica.</p>
+                <p>Our system processes 14.7 petabytes of security data daily, identifying and neutralizing threats in real-time before they can impact your systems. Each data center is protected by military-grade physical security.</p>
+                <p>With automatic quantum-entangled failover and encrypted communications between nodes, our system maintains 100% uptime even during coordinated global attacks. Your security is our absolute priority.</p>
+                <button class="cta-button" style="margin-top: 2rem;">EXPLORE OUR NETWORK</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Neural Network Section -->
+    <section id="neural" class="neural-section">
+        <canvas id="neural-canvas"></canvas>
+        <div class="neural-content">
+            <div class="section-header">
+                <h2>NEURAL SECURITY MATRIX</h2>
+                <p>Our AI neural network processes threats at quantum speeds, adapting and evolving in real-time</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Quantum Tunnel Section -->
+    <section id="tunnel" class="tunnel-section">
+        <canvas id="tunnel-canvas"></canvas>
+        <div class="tunnel-content">
+            <div class="section-header">
+                <h2>QUANTUM SECURITY TUNNEL</h2>
+                <p>Experience our quantum encryption technology that makes data transmission completely unhackable</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Stats Section -->
+    <section id="stats" class="stats-section">
+        <div class="section-header">
+            <h2>UNMATCHED PERFORMANCE</h2>
+            <p>Industry-leading metrics that prove our security dominance</p>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>99.999%</h3>
+                <p>Uptime Guarantee</p>
+            </div>
+            <div class="stat-card">
+                <h3>0.0001%</h3>
+                <p>False Positive Rate</p>
+            </div>
+            <div class="stat-card">
+                <h3>47ms</h3>
+                <p>Global Response</p>
+            </div>
+            <div class="stat-card">
+                <h3>256-bit</h3>
+                <p>Quantum Encryption</p>
+            </div>
+            <div class="stat-card">
+                <h3>14.7PB</h3>
+                <p>Daily Data Processed</p>
+            </div>
+            <div class="stat-card">
+                <h3>0</h3>
+                <p>Successful Breaches</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Titan Security</h3>
+                <p>The world's most advanced anti-cheat and server security solution, protecting over 5 million servers across the globe.</p>
+            </div>
+            <div class="footer-column">
+                <h3>Technology</h3>
+                <ul>
+                    <li><a href="#">TitanShield AI</a></li>
+                    <li><a href="#">Quantum Encryption</a></li>
+                    <li><a href="#">Global Network</a></li>
+                    <li><a href="#">API Integration</a></li>
+                    <li><a href="#">Threat Intelligence</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Security Reports</a></li>
+                    <li><a href="#">API Reference</a></li>
+                    <li><a href="#">Case Studies</a></li>
+                    <li><a href="#">Research Papers</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contact</h3>
+                <ul>
+                    <li><a href="#">Enterprise Sales</a></li>
+                    <li><a href="#">Support Portal</a></li>
+                    <li><a href="#">Security Partners</a></li>
+                    <li><a href="#">Press Inquiries</a></li>
+                    <li><a href="#">Careers</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 TITAN SERVICE SECURITY. ALL RIGHTS RESERVED. PROTECTING 5,000,000+ SERVERS WORLDWIDE.
+        </div>
+    </footer>
+    
+    <script>
+        // Matrix Rain Effect
+        const matrixCanvas = document.getElementById('matrix-canvas');
+        const matrixCtx = matrixCanvas.getContext('2d');
+        matrixCanvas.width = window.innerWidth;
+        matrixCanvas.height = window.innerHeight;
+        
+        const matrixChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#@%&*";
+        const fontSize = 14;
+        const columns = matrixCanvas.width / fontSize;
+        const drops = [];
+        
+        for(let i = 0; i < columns; i++) {
+            drops[i] = Math.floor(Math.random() * matrixCanvas.height / fontSize);
+        }
+        
+        function drawMatrix() {
+            matrixCtx.fillStyle = 'rgba(5, 10, 25, 0.05)';
+            matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+            
+            matrixCtx.fillStyle = '#0fff50';
+            matrixCtx.font = `${fontSize}px monospace`;
+            
+            for(let i = 0; i < drops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+                
+                matrixCtx.fillText(text, x, y);
+                
+                if(y > matrixCanvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                drops[i]++;
+            }
+        }
+        
+        setInterval(drawMatrix, 50);
+        
+        // Initialize Three.js for main background
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('main-canvas'),
+            antialias: true,
+            alpha: true
+        });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        
+        // Create particles for background
+        const particleCount = 15000;
+        const particles = new THREE.BufferGeometry();
+        const posArray = new Float32Array(particleCount * 3);
+        const colorArray = new Float32Array(particleCount * 3);
+        const sizeArray = new Float32Array(particleCount);
+        const velocityArray = new Float32Array(particleCount);
+        
+        for(let i = 0; i < particleCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 200;
+            colorArray[i] = Math.random();
+            
+            if(i % 3 === 0) {
+                sizeArray[i/3] = Math.random() * 1.5;
+                velocityArray[i/3] = Math.random() * 0.02 + 0.005;
+            }
+        }
+        
+        particles.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        particles.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+        particles.setAttribute('size', new THREE.BufferAttribute(sizeArray, 1));
+        particles.setAttribute('velocity', new THREE.BufferAttribute(velocityArray, 1));
+        
+        // Particle material
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.5,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending,
+            sizeAttenuation: true
+        });
+        
+        const particleMesh = new THREE.Points(particles, particleMaterial);
+        scene.add(particleMesh);
+        
+        // Create globe
+        const globeScene = new THREE.Scene();
+        const globeCamera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        const globeRenderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('globe-canvas'),
+            alpha: true,
+            antialias: true
+        });
+        
+        // Create Earth
+        const globeGeometry = new THREE.SphereGeometry(2.5, 128, 128);
+        const globeMaterial = new THREE.MeshPhongMaterial({
+            color: 0x0a1128,
+            emissive: 0x0a1128,
+            specular: 0x00f3ff,
+            shininess: 100,
+            wireframe: true,
+            wireframeLinewidth: 1
+        });
+        
+        const earth = new THREE.Mesh(globeGeometry, globeMaterial);
+        globeScene.add(earth);
+        
+        // Add glowing points for servers
+        const serverCount = 300;
+        const servers = new THREE.Group();
+        
+        for(let i = 0; i < serverCount; i++) {
+            const phi = Math.acos(-1 + (2 * i) / serverCount);
+            const theta = Math.sqrt(serverCount * Math.PI) * phi;
+            
+            const x = 2.8 * Math.cos(theta) * Math.sin(phi);
+            const y = 2.8 * Math.sin(theta) * Math.sin(phi);
+            const z = 2.8 * Math.cos(phi);
+            
+            const serverGeometry = new THREE.SphereGeometry(0.05, 16, 16);
+            const serverMaterial = new THREE.MeshBasicMaterial({
+                color: new THREE.Color(
+                    Math.random() * 0.5 + 0.5,
+                    Math.random() * 0.5 + 0.5,
+                    Math.random() + 0.5
+                ),
+                emissive: new THREE.Color(
+                    Math.random() * 0.5,
+                    Math.random() * 0.8 + 0.2,
+                    Math.random() * 0.8 + 0.2
+                )
+            });
+            
+            const server = new THREE.Mesh(serverGeometry, serverMaterial);
+            server.position.set(x, y, z);
+            servers.add(server);
+        }
+        
+        globeScene.add(servers);
+        
+        // Add lights for globe
+        const ambientLight = new THREE.AmbientLight(0x333333);
+        globeScene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0x00f3ff, 2);
+        directionalLight.position.set(5, 3, 5);
+        globeScene.add(directionalLight);
+        
+        const backLight = new THREE.DirectionalLight(0xb967ff, 1.5);
+        backLight.position.set(-5, -3, -5);
+        globeScene.add(backLight);
+        
+        // Create neural network scene
+        const neuralScene = new THREE.Scene();
+        const neuralCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const neuralRenderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('neural-canvas'),
+            alpha: true,
+            antialias: true
+        });
+        
+        neuralRenderer.setSize(window.innerWidth, window.innerHeight);
+        neuralRenderer.setPixelRatio(window.devicePixelRatio);
+        
+        // Create neural network nodes
+        const nodeCount = 100;
+        const nodes = [];
+        const nodeGroup = new THREE.Group();
+        
+        for(let i = 0; i < nodeCount; i++) {
+            const nodeGeometry = new THREE.SphereGeometry(0.3, 16, 16);
+            const nodeMaterial = new THREE.MeshBasicMaterial({
+                color: new THREE.Color(
+                    Math.random() * 0.5 + 0.5,
+                    Math.random() * 0.5 + 0.5,
+                    Math.random() + 0.5
+                ),
+                emissive: new THREE.Color(
+                    Math.random() * 0.3,
+                    Math.random() * 0.7 + 0.3,
+                    Math.random() * 0.7 + 0.3
+                )
+            });
+            
+            const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+            node.position.set(
+                (Math.random() - 0.5) * 30,
+                (Math.random() - 0.5) * 30,
+                (Math.random() - 0.5) * 30
+            );
+            
+            nodes.push(node);
+            nodeGroup.add(node);
+        }
+        
+        neuralScene.add(nodeGroup);
+        
+        // Create neural connections
+        const connectionGroup = new THREE.Group();
+        
+        for(let i = 0; i < nodes.length; i++) {
+            for(let j = i + 1; j < nodes.length; j++) {
+                if(Math.random() > 0.7) {
+                    const start = nodes[i].position;
+                    const end = nodes[j].position;
+                    
+                    const distance = start.distanceTo(end);
+                    const connectionGeometry = new THREE.CylinderGeometry(0.03, 0.03, distance, 8);
+                    connectionGeometry.rotateZ(Math.PI / 2);
+                    
+                    const connectionMaterial = new THREE.MeshBasicMaterial({
+                        color: 0x00f3ff,
+                        transparent: true,
+                        opacity: 0.3
+                    });
+                    
+                    const connection = new THREE.Mesh(connectionGeometry, connectionMaterial);
+                    
+                    const midPoint = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
+                    connection.position.copy(midPoint);
+                    
+                    connection.lookAt(end);
+                    connectionGroup.add(connection);
+                }
+            }
+        }
+        
+        neuralScene.add(connectionGroup);
+        
+        // Create quantum tunnel
+        const tunnelScene = new THREE.Scene();
+        const tunnelCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const tunnelRenderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('tunnel-canvas'),
+            alpha: true,
+            antialias: true
+        });
+        
+        tunnelRenderer.setSize(window.innerWidth, window.innerHeight);
+        tunnelRenderer.setPixelRatio(window.devicePixelRatio);
+        
+        // Create tunnel
+        const tunnelGroup = new THREE.Group();
+        const ringCount = 100;
+        const ringRadius = 10;
+        
+        for(let i = 0; i < ringCount; i++) {
+            const ringGeometry = new THREE.RingGeometry(ringRadius - 0.2, ringRadius, 128);
+            const ringMaterial = new THREE.MeshBasicMaterial({
+                color: new THREE.Color(
+                    Math.abs(Math.sin(i * 0.1)) * 0.8,
+                    Math.abs(Math.cos(i * 0.2)) * 0.8,
+                    Math.abs(Math.sin(i * 0.3)) * 0.8 + 0.2
+                ),
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.7
+            });
+            
+            const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+            ring.position.z = -i * 3;
+            ring.rotation.x = Math.PI / 2;
+            tunnelGroup.add(ring);
+        }
+        
+        tunnelScene.add(tunnelGroup);
+        
+        // Camera positions
+        camera.position.z = 15;
+        neuralCamera.position.z = 30;
+        tunnelCamera.position.z = 10;
+        globeCamera.position.z = 5;
+        
+        // Mouse movement tracking
+        const mouse = { x: 0, y: 0 };
+        
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+        });
+        
+        // Animate particles
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Main particle movement
+            const positions = particleMesh.geometry.attributes.position.array;
+            const velocities = particleMesh.geometry.attributes.velocity.array;
+            
+            for(let i = 0; i < positions.length; i += 3) {
+                positions[i] += (Math.random() - 0.5) * 0.1;
+                positions[i + 1] -= velocities[i/3];
+                
+                if(positions[i + 1] < -100) {
+                    positions[i + 1] = 100;
+                    positions[i] = (Math.random() - 0.5) * 200;
+                    positions[i + 2] = (Math.random() - 0.5) * 200;
+                }
+            }
+            
+            particleMesh.geometry.attributes.position.needsUpdate = true;
+            
+            // Rotate globe
+            earth.rotation.y += 0.002;
+            servers.rotation.y += 0.001;
+            
+            // Update globe renderer size
+            const globeSize = Math.min(window.innerWidth * 0.8, 600);
+            globeRenderer.setSize(globeSize, globeSize);
+            
+            // Animate neural network
+            nodes.forEach(node => {
+                node.position.x += (Math.random() - 0.5) * 0.1;
+                node.position.y += (Math.random() - 0.5) * 0.1;
+                node.position.z += (Math.random() - 0.5) * 0.1;
+            });
+            
+            // Move tunnel
+            tunnelGroup.rotation.z += 0.01;
+            tunnelGroup.position.z += 0.5;
+            
+            if(tunnelGroup.position.z > 30) {
+                tunnelGroup.position.z = 0;
+            }
+            
+            // Camera movement based on mouse
+            camera.position.x += (mouse.x * 10 - camera.position.x) * 0.05;
+            camera.position.y += (mouse.y * 10 - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+            
+            neuralCamera.position.x += (mouse.x * 20 - neuralCamera.position.x) * 0.03;
+            neuralCamera.position.y += (mouse.y * 20 - neuralCamera.position.y) * 0.03;
+            neuralCamera.lookAt(neuralScene.position);
+            
+            tunnelCamera.position.x += (mouse.x * 5 - tunnelCamera.position.x) * 0.02;
+            tunnelCamera.position.y += (mouse.y * 5 - tunnelCamera.position.y) * 0.02;
+            tunnelCamera.lookAt(tunnelScene.position);
+            
+            // Render scenes
+            renderer.render(scene, camera);
+            globeRenderer.render(globeScene, globeCamera);
+            neuralRenderer.render(neuralScene, neuralCamera);
+            tunnelRenderer.render(tunnelScene, tunnelCamera);
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            
+            neuralCamera.aspect = window.innerWidth / window.innerHeight;
+            neuralCamera.updateProjectionMatrix();
+            neuralRenderer.setSize(window.innerWidth, window.innerHeight);
+            
+            tunnelCamera.aspect = window.innerWidth / window.innerHeight;
+            tunnelCamera.updateProjectionMatrix();
+            tunnelRenderer.setSize(window.innerWidth, window.innerHeight);
+            
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+        });
+        
+        // GSAP animations
+        gsap.registerPlugin(ScrollTrigger);
+        
+        gsap.from('.hero h1', {
+            duration: 1.5,
+            y: 100,
+            opacity: 0,
+            ease: 'power3.out'
+        });
+        
+        gsap.from('.hero h2', {
+            duration: 1.5,
+            y: 50,
+            opacity: 0,
+            delay: 0.3,
+            ease: 'power3.out'
+        });
+        
+        gsap.from('.hero-stats', {
+            scrollTrigger: {
+                trigger: '.hero-stats',
+                start: 'top 80%'
+            },
+            duration: 1,
+            y: 50,
+            opacity: 0,
+            stagger: 0.2,
+            ease: 'power3.out'
+        });
+        
+        gsap.from('.feature-card', {
+            scrollTrigger: {
+                trigger: '#features',
+                start: 'top 80%'
+            },
+            duration: 1,
+            y: 100,
+            opacity: 0,
+            stagger: 0.2,
+            ease: 'power3.out'
+        });
+        
+        gsap.from('.globe-content', {
+            scrollTrigger: {
+                trigger: '.globe-section',
+                start: 'top 80%'
+            },
+            duration: 1,
+            x: -100,
+            opacity: 0,
+            ease: 'power3.out'
+        });
+        
+        // Start animations
+        animate();
+    </script>
+</body>
+</html>
